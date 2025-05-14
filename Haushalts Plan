@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🌈 Wochenplan – Haushalt</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 28px;
+    }
+
+    .week {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .week label {
+      font-size: 16px;
+    }
+
+    .week input {
+      padding: 5px;
+      font-size: 16px;
+      width: 200px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #eee;
+      font-weight: bold;
+    }
+
+    td input {
+      width: 100%;
+      border: none;
+      text-align: center;
+      font-size: 14px;
+      padding: 4px;
+      background-color: transparent;
+    }
+
+    .speichern-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 30px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .farben th:nth-child(2) { background-color: #f4c7c3; }
+    .farben th:nth-child(3) { background-color: #b4d2e7; }
+    .farben th:nth-child(4) { background-color: #c6b4de; }
+    .farben th:nth-child(5) { background-color: #d2e4c4; }
+    .farben th:nth-child(6) { background-color: #f3b6b6; }
+    .farben th:nth-child(7) { background-color: #ffd9b3; }
+    .farben th:nth-child(8) { background-color: #d3d3f7; }
+  </style>
+</head>
+<body>
+  <h1>🌈 Wochenplan – Haushalt</h1>
+
+  <div class="week">
+    <label for="woche">Woche:</label>
+    <input type="text" id="woche" name="woche" placeholder="z. B. KW 20" />
+  </div>
+
+  <table class="farben" id="wochenplan">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Montag</th>
+        <th>Dienstag</th>
+        <th>Mittwoch</th>
+        <th>Donnerstag</th>
+        <th>Freitag</th>
+        <th>Samstag</th>
+        <th>Sonntag</th>
+      </tr>
+    </thead>
+    <tbody id="plan-body">
+      <!-- Dynamischer Inhalt -->
+    </tbody>
+  </table>
+
+  <button class="speichern-btn" onclick="alert('Speichern ist in dieser HTML-Version nicht möglich. Bitte Screenshot machen oder kopieren.')">
+    💾 Speichern
+  </button>
+
+  <script>
+    const zeilenNamen = [
+      "Lea & Jason",
+      "Björn & Chantal",
+      "Migel & Justin",
+      "Thomas",
+      "", "", "", ""
+    ];
+
+    const tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
+
+    const daten = {
+      "0Montag": "Kinderzimmer & Balkon", "0Dienstag": "Kinderzimmer & Balkon", "0Mittwoch": "Kinderzimmer & Balkon", "0Donnerstag": "Kinderzimmer & Balkon", "0Freitag": "Kinderzimmer & Balkon", "0Samstag": "Kinderzimmer & Balkon", "0Sonntag": "Kinderzimmer & Balkon",
+      "1Montag": "Schlafzimmer & Bad", "1Dienstag": "Schlafzimmer & Bad", "1Mittwoch": "Schlafzimmer & Bad", "1Donnerstag": "Schlafzimmer & Bad", "1Freitag": "Schlafzimmer & Bad", "1Samstag": "Schlafzimmer & Bad", "1Sonntag": "Schlafzimmer & Bad",
+      "2Montag": "Schlafzimmer& Küche", "2Dienstag": "Schlafzimmer& Küche", "2Mittwoch": "Schlafzimmer& Küche", "2Donnerstag": "Schlafzimmer& Küche", "2Freitag": "Schlafzimmer& Küche", "2Samstag": "Schlafzimmer& Küche", "2Sonntag": "Schlafzimmer& Küche",
+      "3Montag": "Saugen & Tische ", "3Dienstag": "Saugen & Tische ", "3Mittwoch": "Saugen & Tische ", "3Donnerstag": "Saugen & Tische ", "3Freitag": "Saugen & Tische ", "3Samstag": "Saugen & Tische ", "3Sonntag": "Saugen & Tische ",
+      "4Montag": "", "4Dienstag": "", "4Mittwoch": "", "4Donnerstag": "", "4Freitag": "", "4Samstag": "", "4Sonntag": "",
+      "5Montag": "", "5Dienstag": "", "5Mittwoch": "", "5Donnerstag": "", "5Freitag": "", "5Samstag": "", "5Sonntag": "",
+      "6Montag": "", "6Dienstag": "", "6Mittwoch": "", "6Donnerstag": "", "6Freitag": "", "6Samstag": "", "6Sonntag": "",
+      "7Montag": "", "7Dienstag": "", "7Mittwoch": "", "7Donnerstag": "", "7Freitag": "", "7Samstag": "", "7Sonntag": ""
+    };
+
+    const tbody = document.getElementById("plan-body");
+
+    zeilenNamen.forEach((name, i) => {
+      const tr = document.createElement("tr");
+      const nameTd = document.createElement("td");
+      nameTd.textContent = name;
+      tr.appendChild(nameTd);
+
+      tage.forEach(tag => {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
+        input.value = daten[`${i}${tag}`] || "";
+        input.readOnly = false;
+        td.appendChild(input);
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>
